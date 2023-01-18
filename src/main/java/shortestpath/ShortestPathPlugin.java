@@ -140,7 +140,8 @@ public class ShortestPathPlugin extends Plugin {
 
         boolean reloadTransports = "useAgilityShortcuts".equals(event.getKey()) ||
             "useGrappleShortcuts".equals(event.getKey()) || "useBoats".equals(event.getKey()) ||
-            "useFairyRings".equals(event.getKey()) || "useTeleports".equals(event.getKey());
+            "useFairyRings".equals(event.getKey()) || "useTeleports".equals(event.getKey()) ||
+            "useCanoes".equals(event.getKey()) || "useArdyCloak".equals(event.getKey());
 
         if (reloadTransports) {
             Map<WorldPoint, List<Transport>> transports = Transport.fromResources(config);
@@ -309,13 +310,32 @@ public class ShortestPathPlugin extends Plugin {
 
     public boolean playerHasAxe() {
         int[] axes = {1349,1351,1353,1355,1357,1359,1361,6739};
+        return playerHasItem(axes);
+    }
+
+    public boolean playerHasArdyCloak() {
+        int[] cloaks = {13121};
+        return playerHasItem(cloaks);
+    }
+
+    private boolean playerHasItem(int[] items) {
         ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
         Item[] inventoryItems = inventory.getItems();
+        ItemContainer equipment = client.getItemContainer(InventoryID.EQUIPMENT);
+        Item[] equipmentItems = equipment.getItems();
+        for (Item item : equipmentItems)
+        {
+            int itemId = item.getId();
+            for (int searchItemId : items) {
+                if(itemId == searchItemId)
+                    return true;
+            }
+        }
         for (Item item : inventoryItems)
         {
             int itemId = item.getId();
-            for (int axeId : axes) {
-                if(itemId == axeId)
+            for (int searchItemId : items) {
+                if(itemId == searchItemId)
                     return true;
             }
         }
@@ -324,10 +344,19 @@ public class ShortestPathPlugin extends Plugin {
 
     public void setTarget(WorldPoint target) {
         Player localPlayer = client.getLocalPlayer();
+        WorldPoint playerLocation = localPlayer.getWorldLocation();
         if (!startPointSet && localPlayer == null) {
             return;
         }
         pathfinderConfig.refresh();
+        pathfinderConfig.getTemporaryTransports().clear();
+        if (config.useArdyCloak()) {
+            if (!config.checkArdyCloak() || playerHasArdyCloak())
+            {
+                Transport transport = new Transport(playerLocation, new WorldPoint(2607, 3221, 0), Transport.TransportType.ARDY_CLOAK);
+                pathfinderConfig.getTemporaryTransports().computeIfAbsent(playerLocation, k -> new ArrayList<>()).add(transport);
+            }
+        }
 
         if (target == null) {
             worldMapPointManager.remove(marker);

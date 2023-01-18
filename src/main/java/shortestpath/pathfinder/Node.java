@@ -11,12 +11,32 @@ public class Node implements Comparable<Node> {
     public final long heuristic;
     private final int wait;
     private final int distance;
+    private boolean isTransport;
 
     public Node(WorldPoint position, Node previous, WorldPoint target, int wait) {
         this.position = position;
         this.previous = previous;
         this.wait = (previous != null ? previous.wait : 0) + wait;
-        distance = previous != null ? position.distanceTo(previous.position) : 0;
+        this.distance = previous != null ? position.distanceTo(previous.position) : 0;
+        this.isTransport = distance > 1;
+        this.heuristic = getHeuristic(target);
+    }
+
+    public Node(WorldPoint position, Node previous, WorldPoint target, int wait, int distance) {
+        this.position = position;
+        this.previous = previous;
+        this.wait = (previous != null ? previous.wait : 0) + wait;
+        this.distance = distance;
+        this.isTransport = distance > 1;
+        this.heuristic = getHeuristic(target);
+    }
+
+    public Node(WorldPoint position, Node previous, WorldPoint target, int wait, int distance, boolean transport) {
+        this.position = position;
+        this.previous = previous;
+        this.wait = (previous != null ? previous.wait : 0) + wait;
+        this.distance = distance;
+        this.isTransport = transport;
         this.heuristic = getHeuristic(target);
     }
 
@@ -37,7 +57,7 @@ public class Node implements Comparable<Node> {
     }
 
     public boolean isTransport() {
-        return distance > 1;
+        return isTransport;
     }
 
     /**

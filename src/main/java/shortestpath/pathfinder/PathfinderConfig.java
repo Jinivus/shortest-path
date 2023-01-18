@@ -17,7 +17,7 @@ import shortestpath.ShortestPathPlugin;
 import shortestpath.Transport;
 
 public class PathfinderConfig {
-    public static final Duration CALCULATION_CUTOFF = Duration.ofSeconds(2);
+    public static final Duration CALCULATION_CUTOFF = Duration.ofSeconds(10);
     private static final WorldArea WILDERNESS_ABOVE_GROUND = new WorldArea(2944, 3523, 448, 448, 0);
     private static final WorldArea WILDERNESS_UNDERGROUND = new WorldArea(2944, 9918, 320, 442, 0);
 
@@ -25,6 +25,8 @@ public class PathfinderConfig {
     private final CollisionMap map;
     @Getter
     private final Map<WorldPoint, List<Transport>> transports;
+    @Getter
+    private final Map<WorldPoint, List<Transport>> temporaryTransports;
     private final Client client;
     private final ShortestPathConfig config;
     private final ShortestPathPlugin plugin;
@@ -48,6 +50,7 @@ public class PathfinderConfig {
                             ShortestPathConfig config, ShortestPathPlugin plugin) {
         this.map = map;
         this.transports = transports;
+        this.temporaryTransports = new HashMap<>();
         this.client = client;
         this.config = config;
         this.plugin = plugin;

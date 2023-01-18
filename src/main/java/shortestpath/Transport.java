@@ -52,6 +52,10 @@ public class Transport {
     @Getter
     private boolean isTeleport;
 
+    /** Whether the transport is ardyCloak */
+    @Getter
+    private boolean isArdyClock;
+
     /** The additional travel time */
     @Getter
     private int wait;
@@ -64,6 +68,23 @@ public class Transport {
     Transport(final WorldPoint origin, final WorldPoint destination, final boolean isFairyRing) {
         this(origin, destination);
         this.isFairyRing = isFairyRing;
+    }
+
+    Transport(final WorldPoint origin, final WorldPoint destination, final TransportType type) {
+        this.origin = origin;
+        this.destination = destination;
+        switch (type) {
+            case TRANSPORT:
+            case TELEPORT:
+                this.isTeleport = true;
+            case BOAT:
+                this.isBoat = true;
+            case FAIRY_RING:
+                this.isFairyRing = true;
+            case ARDY_CLOAK:
+                this.isArdyClock = true;
+        }
+
     }
 
     Transport(final String line) {
@@ -207,10 +228,11 @@ public class Transport {
         return transports;
     }
 
-    private enum TransportType {
+    enum TransportType {
         TRANSPORT,
         BOAT,
         FAIRY_RING,
-        TELEPORT
+        TELEPORT,
+        ARDY_CLOAK,
     }
 }

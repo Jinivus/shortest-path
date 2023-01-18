@@ -57,6 +57,21 @@ public class Pathfinder implements Runnable {
         }
     }
 
+    private void addNeighbor(Node node, WorldPoint neighbor, int wait, int distance, boolean isTransport ) {
+        if (config.avoidWilderness(node.position, neighbor, target)) {
+            return;
+        }
+
+        if (visited.add(neighbor)) {
+            Node n = new Node(neighbor, node, target, wait, distance, isTransport);
+            if (n.isTransport()) {
+                pending.add(n);
+            } else {
+                boundary.add(n);
+            }
+        }
+    }
+
     private void addNeighbors(Node node) {
         for (OrdinalDirection direction : OrdinalDirection.values()) {
             for (Transport transport : config.getTransports().getOrDefault(node.position.dx(direction.x).dy(direction.y), new ArrayList<>())) {
@@ -76,6 +91,18 @@ public class Pathfinder implements Runnable {
                 addNeighbor(node, transport.getDestination(), transport.getWait());
             }
         }
+
+        for (Transport transport : config.getTemporaryTransports().getOrDefault(node.position, new ArrayList<>())) {
+            if (config.useTransport(transport)) {
+                if(transport.isArdyClock()) {
+                    addNeighbor(node, transport.getDestination(), transport.getWait(), 30, false);
+                }
+                else {
+                    addNeighbor(node, transport.getDestination(), transport.getWait());
+                }
+            }
+        }
+
     }
 
     private long getLowestHeuristic(List<Node> data) {

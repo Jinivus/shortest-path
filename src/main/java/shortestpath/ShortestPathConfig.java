@@ -106,10 +106,32 @@ public interface ShortestPathConfig extends Config {
     }
 
     @ConfigItem(
+            keyName = "useArdyCloak",
+            name = "Use ardy cloak",
+            description = "Whether to include teleportation portals and levers in the path",
+            position = 9,
+            section = sectionSettings
+    )
+    default boolean useArdyCloak() {
+        return false;
+    }
+
+    @ConfigItem(
+            keyName = "checkArdyCloak",
+            name = "Check for ardy cloak",
+            description = "Checks inventory to see if it contains an ardy cloak before including",
+            position = 10,
+            section = sectionSettings
+    )
+    default boolean checkArdyCloak() {
+        return false;
+    }
+
+    @ConfigItem(
         keyName = "cancelInstead",
         name = "Cancel instead of recalculating",
         description = "Whether the path should be cancelled rather than recalculated when the distance limit is exceeded",
-        position = 9,
+        position = 11,
         section = sectionSettings
     )
     default boolean cancelInstead() {
