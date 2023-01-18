@@ -33,6 +33,8 @@ public class PathfinderConfig {
     private boolean useAgilityShortcuts;
     private boolean useGrappleShortcuts;
     private boolean useBoats;
+    private boolean useCanoes;
+    private boolean checkForAxeBeforeUsingCanoe;
     private boolean useFairyRings;
     private boolean useTeleports;
     private int agilityLevel;
@@ -60,6 +62,8 @@ public class PathfinderConfig {
         useAgilityShortcuts = config.useAgilityShortcuts();
         useGrappleShortcuts = config.useGrappleShortcuts();
         useBoats = config.useBoats();
+        useCanoes = config.useCanoes();
+        checkForAxeBeforeUsingCanoe = config.checkForAxeBeforeUsingCanoes();
         useFairyRings = config.useFairyRings();
         useTeleports = config.useTeleports();
         agilityLevel = client.getBoostedSkillLevel(Skill.AGILITY);
@@ -130,8 +134,19 @@ public class PathfinderConfig {
             if (!useBoats) {
                 return false;
             }
+        }
 
-            if (isCanoe && woodcuttingLevel < transportWoodcuttingLevel) {
+        if (isCanoe) {
+            if (!useCanoes) {
+                return false;
+            }
+
+            if (woodcuttingLevel < transportWoodcuttingLevel) {
+                return false;
+            }
+
+            if (checkForAxeBeforeUsingCanoe && !plugin.playerHasAxe())
+            {
                 return false;
             }
         }

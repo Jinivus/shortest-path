@@ -53,7 +53,7 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "useBoats",
         name = "Use boats",
-        description = "Whether to include boats, canoes and charter ships in the path",
+        description = "Whether to include boats and charter ships in the path",
         position = 4,
         section = sectionSettings
     )
@@ -62,10 +62,32 @@ public interface ShortestPathConfig extends Config {
     }
 
     @ConfigItem(
+            keyName = "useCanoes",
+            name = "Use canoes",
+            description = "Whether to include canoes in the path",
+            position = 5,
+            section = sectionSettings
+    )
+    default boolean useCanoes() {
+        return true;
+    }
+
+    @ConfigItem(
+            keyName = "checkForAxeBeforeUsingCanoes",
+            name = "Check axe before using canoes",
+            description = "Whether to check if a player has an axe in their inventory before using a canoe",
+            position = 6,
+            section = sectionSettings
+    )
+    default boolean checkForAxeBeforeUsingCanoes() {
+        return true;
+    }
+
+    @ConfigItem(
         keyName = "useFairyRings",
         name = "Use fairy rings",
         description = "Whether to include fairy rings in the path. You must also have completed the required quest or miniquest",
-        position = 5,
+        position = 7,
         section = sectionSettings
     )
     default boolean useFairyRings() {
@@ -76,7 +98,7 @@ public interface ShortestPathConfig extends Config {
         keyName = "useTeleports",
         name = "Use teleports",
         description = "Whether to include teleportation portals and levers in the path",
-        position = 6,
+        position = 8,
         section = sectionSettings
     )
     default boolean useTeleports() {
@@ -87,7 +109,7 @@ public interface ShortestPathConfig extends Config {
         keyName = "cancelInstead",
         name = "Cancel instead of recalculating",
         description = "Whether the path should be cancelled rather than recalculated when the distance limit is exceeded",
-        position = 7,
+        position = 9,
         section = sectionSettings
     )
     default boolean cancelInstead() {

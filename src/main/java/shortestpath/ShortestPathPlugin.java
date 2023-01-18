@@ -2,29 +2,9 @@ package shortestpath;
 
 import com.google.inject.Inject;
 import com.google.inject.Provides;
-import java.awt.Color;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import lombok.Getter;
-import net.runelite.api.Client;
-import net.runelite.api.KeyCode;
-import net.runelite.api.MenuAction;
-import net.runelite.api.MenuEntry;
-import net.runelite.api.Player;
 import net.runelite.api.Point;
-import net.runelite.api.RenderOverview;
-import net.runelite.api.SpriteID;
-import net.runelite.api.Varbits;
+import net.runelite.api.*;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuEntryAdded;
@@ -49,6 +29,13 @@ import net.runelite.client.util.Text;
 import shortestpath.pathfinder.CollisionMap;
 import shortestpath.pathfinder.Pathfinder;
 import shortestpath.pathfinder.PathfinderConfig;
+
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.*;
 
 @PluginDescriptor(
     name = "Shortest Path",
@@ -320,11 +307,27 @@ public class ShortestPathPlugin extends Plugin {
         return null;
     }
 
-    private void setTarget(WorldPoint target) {
+    public boolean playerHasAxe() {
+        int[] axes = {1349,1351,1353,1355,1357,1359,1361,6739};
+        ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
+        Item[] inventoryItems = inventory.getItems();
+        for (Item item : inventoryItems)
+        {
+            int itemId = item.getId();
+            for (int axeId : axes) {
+                if(itemId == axeId)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public void setTarget(WorldPoint target) {
         Player localPlayer = client.getLocalPlayer();
         if (!startPointSet && localPlayer == null) {
             return;
         }
+        pathfinderConfig.refresh();
 
         if (target == null) {
             worldMapPointManager.remove(marker);

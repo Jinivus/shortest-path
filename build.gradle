@@ -6,6 +6,9 @@ repositories {
     mavenLocal()
     maven { url = 'https://repo.runelite.net' }
     mavenCentral()
+    flatDir {
+        dirs("libs")
+    }
 }
 
 def runeLiteVersion = 'latest.release'
@@ -16,13 +19,14 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
+
     testImplementation 'junit:junit:4.12'
     testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion
     testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
 group = 'shortestpath'
-version = '1.9.3'
+version = '1.9.6'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
